@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"net"
 	"os"
 	"strings"
 	"sync"
@@ -108,8 +109,12 @@ func GrabCredentials(jobs chan<- *Account, raw_data []string) {
 	defer wg.Done()
 }
 
+func Dialer() *net.Dialer {
+	return &net.Dialer{Timeout: 5 * time.Second}
+}
+
 func Check(a *Account) {
-	cli, err := client.DialTLS("imap."+a.Domain+":993", nil) // TODO: Add protocols and domains
+	cli, err := client.DialWithDialerTLS(Dialer(), "imap."+a.Domain+":993", nil) // TODO: Add protocols and domains
 	if err != nil {
 		return
 	}
