@@ -111,10 +111,8 @@ func GrabCredentials(jobs chan<- *Account, raw_data []string) {
 func Check(a *Account) {
 	cli, err := client.DialTLS("imap."+a.Domain+":993", nil) // TODO: Add protocols and domains
 	if err != nil {
-		fmt.Println(err, a.Domain)
 		return
 	}
-	fmt.Println("Connected", a.Domain)
 	defer cli.Logout()
 
 	if err := cli.Login(a.Username, a.Password); err != nil {
